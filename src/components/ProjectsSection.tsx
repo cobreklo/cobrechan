@@ -55,8 +55,7 @@ const getColorClasses = (color: string) => {
   return colorMap[color] || colorMap.primary;
 };
 
-const ProjectCard = ({ project, index, isInView }: { project: Project; index: number; isInView: boolean }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const ProjectCard = ({ project, index, isInView, onExpand }: { project: Project; index: number; isInView: boolean; onExpand: (project: Project) => void }) => {
   const colors = getColorClasses(project.color);
 
   return (
@@ -86,7 +85,7 @@ const ProjectCard = ({ project, index, isInView }: { project: Project; index: nu
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsExpanded(true)}
+              onClick={() => onExpand(project)}
               className="p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-foreground/10 text-foreground hover:text-primary transition-colors"
             >
               <Maximize2 size={18} />
@@ -124,42 +123,11 @@ const ProjectCard = ({ project, index, isInView }: { project: Project; index: nu
           </div>
         </div>
       </motion.div>
-
-      {/* Expanded Modal */}
-      {isExpanded && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-xl"
-          onClick={() => setIsExpanded(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", damping: 20 }}
-            className="relative w-full max-w-6xl aspect-video rounded-2xl overflow-hidden border border-primary/30"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              src={project.url}
-              title={project.title}
-              className="w-full h-full border-0"
-            />
-            <button
-              onClick={() => setIsExpanded(false)}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-foreground/10 text-foreground hover:text-primary transition-colors"
-            >
-              <X size={24} />
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
     </>
   );
 };
 
-const ProjectsSection = () => {
+const ProjectsSection = ({ onExpandProject }: { onExpandProject: (project: Project) => void }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -191,6 +159,7 @@ const ProjectsSection = () => {
               project={project}
               index={index}
               isInView={isInView}
+              onExpand={onExpandProject}
             />
           ))}
         </div>

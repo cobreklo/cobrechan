@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useState } from 'react';
 import ShaderBackground from '@/components/shader-background';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
@@ -6,8 +7,11 @@ import AboutSection from '@/components/AboutSection';
 import SkillsSection from '@/components/SkillsSection';
 import ProjectsSection from '@/components/ProjectsSection';
 import ContactSection from '@/components/ContactSection';
+import ProjectModal, { Project } from '@/components/ProjectModal';
 
 const Index = () => {
+  const [expandedProject, setExpandedProject] = useState<Project | null>(null);
+
   return (
     <>
       <Helmet>
@@ -24,15 +28,20 @@ const Index = () => {
 
       <div className="relative min-h-screen overflow-x-hidden">
         <ShaderBackground />
-        <Navbar />
+        <Navbar onReset={() => setExpandedProject(null)} />
         
         <main className="relative z-10">
           <HeroSection />
           <AboutSection />
           <SkillsSection />
-          <ProjectsSection />
+          <ProjectsSection onExpandProject={setExpandedProject} />
           <ContactSection />
         </main>
+
+        <ProjectModal 
+          project={expandedProject} 
+          onClose={() => setExpandedProject(null)} 
+        />
       </div>
     </>
   );

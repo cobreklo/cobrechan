@@ -10,7 +10,11 @@ const navItems = [
   { name: 'Contacto', href: '#contact' },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  onReset?: () => void;
+}
+
+const Navbar = ({ onReset }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
