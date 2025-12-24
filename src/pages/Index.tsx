@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import AnimatedBackground from '@/components/AnimatedBackground';
+import ShaderBackground from '@/components/shader-background';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -23,7 +23,7 @@ const Index = () => {
       </Helmet>
 
       <div className="relative min-h-screen overflow-x-hidden">
-        <AnimatedBackground />
+        <ShaderBackground />
         <Navbar />
         
         <main className="relative z-10">
