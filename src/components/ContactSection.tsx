@@ -5,8 +5,8 @@ import { Mail, MessageCircle, Instagram, Send, Sparkles } from 'lucide-react';
 const contactMethods = [
   {
     name: "Email",
-    value: "contacto@claudiosalcedo.dev",
-    href: "mailto:contacto@claudiosalcedo.dev",
+    value: "lethermand123@gmail.com",
+    href: "mailto:lethermand123@gmail.com",
     icon: Mail,
     color: "primary",
     description: "Para consultas profesionales"
@@ -131,7 +131,7 @@ const ContactSection = () => {
           className="text-center"
         >
           <motion.a
-            href="mailto:contacto@claudiosalcedo.dev"
+            href="mailto:lethermand123@gmail.com"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl glow-orange hover:bg-primary/90 transition-all duration-300"
