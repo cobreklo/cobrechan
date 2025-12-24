@@ -28,7 +28,7 @@ const projects: Project[] = [
   {
     title: "Portafolio Aero",
     description: "Portfolio audiovisual profesional con experiencia inmersiva. Showcase de trabajos creativos con animaciones y transiciones elegantes. Proyecto para cliente.",
-    url: "https://portafolioaero.vercel.app/",
+    url: "https://portafoliodegollenme.vercel.app/",
     tags: ["React", "Portfolio", "Audiovisual", "Animaciones"],
     color: "accent"
   }
@@ -69,10 +69,14 @@ const ProjectCard = ({ project, index, isInView }: { project: Project; index: nu
         className={`group relative rounded-2xl border ${colors.border} bg-card/30 backdrop-blur-sm overflow-hidden transition-all duration-500 ${colors.glow}`}
       >
         {/* Project Preview */}
-        <div className="relative aspect-video overflow-hidden bg-muted group-hover:scale-105 transition-transform duration-700">
-          <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${project.color === 'primary' ? 'from-primary/20 to-background' : project.color === 'secondary' ? 'from-secondary/20 to-background' : 'from-accent/20 to-background'}`}>
-            <ExternalLink className={`w-12 h-12 ${colors.text} opacity-50`} />
-          </div>
+        <div className="relative aspect-video overflow-hidden bg-muted">
+          <iframe
+            src={project.url}
+            title={project.title}
+            loading="lazy"
+            className="w-full h-full border-0 pointer-events-none"
+            tabIndex={-1}
+          />
           
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
