@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Mail, MessageCircle, Instagram, Send, Sparkles } from 'lucide-react';
+import ContactModal from './ContactModal';
 
 const contactMethods = [
   {
@@ -56,9 +57,11 @@ const getColorClasses = (color: string) => {
 const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <section id="contact" className="relative py-32 overflow-hidden" ref={ref}>
+      <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <motion.div
@@ -99,6 +102,12 @@ const ContactSection = () => {
                 href={method.href}
                 target={method.href.startsWith('http') ? '_blank' : undefined}
                 rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                onClick={(e) => {
+                  if (method.name === 'Email') {
+                    e.preventDefault();
+                    setIsModalOpen(true);
+                  }
+                }}
                 initial={{ opacity: 0, y: 50 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.15 }}
@@ -130,15 +139,15 @@ const ContactSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center"
         >
-          <motion.a
-            href="mailto:lethermand123@gmail.com"
+          <motion.button
+            onClick={() => setIsModalOpen(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl glow-orange hover:bg-primary/90 transition-all duration-300"
           >
             <Send className="w-5 h-5" />
             Enviar Mensaje
-          </motion.a>
+          </motion.button>
         </motion.div>
       </div>
 
@@ -155,7 +164,7 @@ const ContactSection = () => {
               © 2024 Claudio Salcedo. Todos los derechos reservados.
             </p>
             <p className="text-muted-foreground text-sm flex items-center gap-2">
-              Hecho con <span className="text-primary">♥</span> y mucho código
+              Hecho con <span className="text-primary">♥</span> y mucho sos.
             </p>
           </div>
         </div>
