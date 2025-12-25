@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Palette } from 'lucide-react';
 
 const navItems = [
   { name: 'Inicio', href: '#hero' },
@@ -12,9 +12,10 @@ const navItems = [
 
 interface NavbarProps {
   onReset?: () => void;
+  onToggleTheme?: () => void;
 }
 
-const Navbar = ({ onReset }: NavbarProps) => {
+const Navbar = ({ onReset, onToggleTheme }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -85,14 +86,27 @@ const Navbar = ({ onReset }: NavbarProps) => {
             ))}
           </ul>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden text-foreground p-2"
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-          >
-            {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
+          <div className="flex items-center gap-4">
+            {/* Theme Toggle Button (Desktop) */}
+            <motion.button
+              onClick={onToggleTheme}
+              className="hidden md:flex items-center justify-center p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title="Cambiar tema"
+            >
+              <Palette size={20} />
+            </motion.button>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              className="md:hidden text-foreground p-2"
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+            >
+              {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+          </div>
         </div>
       </div>
 
@@ -123,6 +137,22 @@ const Navbar = ({ onReset }: NavbarProps) => {
                   </a>
                 </motion.li>
               ))}
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navItems.length * 0.1 }}
+              >
+                <button
+                  onClick={() => {
+                    if (onToggleTheme) onToggleTheme();
+                    setIsMobileOpen(false);
+                  }}
+                  className="flex items-center gap-2 w-full py-2 text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
+                >
+                  <Palette size={18} />
+                  <span>Cambiar Tema</span>
+                </button>
+              </motion.li>
             </ul>
           </motion.div>
         )}

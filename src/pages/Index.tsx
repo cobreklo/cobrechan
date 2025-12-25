@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import ShaderBackground from '@/components/shader-background';
+import { ShaderAnimation } from '@/components/shader-lines';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -11,6 +12,7 @@ import ProjectModal, { Project } from '@/components/ProjectModal';
 
 const Index = () => {
   const [expandedProject, setExpandedProject] = useState<Project | null>(null);
+  const [isAlternateTheme, setIsAlternateTheme] = useState(false);
 
   return (
     <>
@@ -27,8 +29,17 @@ const Index = () => {
       </Helmet>
 
       <div className="relative min-h-screen overflow-x-hidden">
-        <ShaderBackground />
-        <Navbar onReset={() => setExpandedProject(null)} />
+        {isAlternateTheme ? (
+          <div className="fixed inset-0 -z-10">
+            <ShaderAnimation />
+          </div>
+        ) : (
+          <ShaderBackground />
+        )}
+        <Navbar 
+          onReset={() => setExpandedProject(null)} 
+          onToggleTheme={() => setIsAlternateTheme(!isAlternateTheme)}
+        />
         
         <main className="relative z-10">
           <HeroSection />
