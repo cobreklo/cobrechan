@@ -173,8 +173,10 @@ const ShaderBackground = () => {
     };
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      // Limit pixel ratio for performance on high-DPI screens
+      const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+      canvas.width = window.innerWidth * pixelRatio;
+      canvas.height = window.innerHeight * pixelRatio;
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
 

@@ -1,17 +1,12 @@
 import { useEffect, useRef } from "react"
-
-declare global {
-  interface Window {
-    THREE: any
-  }
-}
+import * as THREE from "three"
 
 export function ShaderAnimation() {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<{
-    camera: any
-    scene: any
-    renderer: any
+    camera: THREE.Camera | null
+    scene: THREE.Scene | null
+    renderer: THREE.WebGLRenderer | null
     uniforms: any
     animationId: number | null
   }>({
@@ -23,32 +18,23 @@ export function ShaderAnimation() {
   })
 
   useEffect(() => {
-    // Load Three.js dynamically
-    const script = document.createElement("script")
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"
-    script.onload = () => {
-      if (containerRef.current && window.THREE) {
-        initThreeJS()
-      }
+    if (containerRef.current) {
+      initThreeJS()
     }
-    document.head.appendChild(script)
 
     return () => {
-      // Cleanup
       if (sceneRef.current.animationId) {
         cancelAnimationFrame(sceneRef.current.animationId)
       }
       if (sceneRef.current.renderer) {
         sceneRef.current.renderer.dispose()
       }
-      document.head.removeChild(script)
     }
   }, [])
 
   const initThreeJS = () => {
-    if (!containerRef.current || !window.THREE) return
+    if (!containerRef.current) return
 
-    const THREE = window.THREE
     const container = containerRef.current
 
     // Clear any existing content
@@ -62,7 +48,7 @@ export function ShaderAnimation() {
     const scene = new THREE.Scene()
 
     // Create geometry
-    const geometry = new THREE.PlaneBufferGeometry(2, 2)
+    const geometry = new THREE.PlaneGeometry(2, 2)
 
     // Define uniforms
     const uniforms = {
@@ -130,9 +116,17 @@ export function ShaderAnimation() {
     const mesh = new THREE.Mesh(geometry, material)
     scene.add(mesh)
 
-    // Initialize renderer
-    const renderer = new THREE.WebGLRenderer()
-    renderer.setPixelRatio(window.devicePixelRatio)
+    // Initialize renderer with performance settings
+    const renderer = new THREE.WebGLRenderer({
+      powerPreference: "high-performance",
+      antialias: false,
+      alpha: false,
+    })
+    
+    // Limit pixel ratio for performance on high-DPI screens
+    const pixelRatio = Math.min(window.devicePixelRatio, 1.5)
+    renderer.setPixelRatio(pixelRatio)
+    
     container.appendChild(renderer.domElement)
 
     // Store references
