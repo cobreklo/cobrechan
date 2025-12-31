@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ExternalLink, Maximize2, X } from 'lucide-react';
+import { ExternalLink, Maximize2, X, PlayCircle } from 'lucide-react';
 
 interface Project {
   title: string;
@@ -12,44 +12,54 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Mota de Bujos",
+    title: "Motadebujos",
     description: "Galería digital y tienda de comisiones artísticas. Coverarts, dibujos y portadas para álbumes y canciones. Proyecto para cliente con diseño inmersivo.",
     url: "https://motadebujos.vercel.app/",
     tags: ["React", "Galería", "E-commerce", "Arte Digital"],
     color: "primary"
   },
   {
-    title: "PPC Cotapos",
+    title: "PPC Cotapos - E-commerce",
     description: "Single Page Application para venta de cerveza artesanal. Diseño moderno y atractivo con experiencia de usuario fluida. Proyecto para cliente.",
     url: "https://ppcotapos.vercel.app/",
     tags: ["React", "SPA", "E-commerce", "Diseño Moderno"],
     color: "secondary"
   },
   {
-    title: "Portafolio Aero",
+    title: "Portafolio Audiovisual",
     description: "Portfolio audiovisual profesional con experiencia inmersiva. Showcase de trabajos creativos con animaciones y transiciones elegantes. Proyecto para cliente.",
     url: "https://portafoliodegollenme.vercel.app/",
     tags: ["React", "Portfolio", "Audiovisual", "Animaciones"],
     color: "accent"
+  },
+  {
+    title: "Sinakawanpuntocom",
+    description: "Plataforma web interactiva con diseño personalizado. Experiencia de usuario optimizada y navegación fluida.",
+    url: "https://sinakawanpuntocom.vercel.app/",
+    tags: ["React", "Web App", "Frontend", "UI/UX"],
+    color: "primary"
   }
 ];
 
 const getColorClasses = (color: string) => {
-  const colorMap: Record<string, { text: string; border: string; glow: string }> = {
+  const colorMap: Record<string, { text: string; border: string; glow: string; bg: string }> = {
     primary: { 
       text: 'text-primary', 
       border: 'border-primary/40',
-      glow: 'hover:shadow-[0_0_40px_rgba(255,107,0,0.3)]'
+      glow: 'hover:shadow-[0_0_40px_rgba(255,107,0,0.3)]',
+      bg: 'bg-primary/5'
     },
     secondary: { 
       text: 'text-secondary', 
       border: 'border-secondary/40',
-      glow: 'hover:shadow-[0_0_40px_rgba(147,51,234,0.3)]'
+      glow: 'hover:shadow-[0_0_40px_rgba(147,51,234,0.3)]',
+      bg: 'bg-secondary/5'
     },
     accent: { 
       text: 'text-accent', 
       border: 'border-accent/40',
-      glow: 'hover:shadow-[0_0_40px_rgba(34,197,94,0.3)]'
+      glow: 'hover:shadow-[0_0_40px_rgba(34,197,94,0.3)]',
+      bg: 'bg-accent/5'
     },
   };
   return colorMap[color] || colorMap.primary;
@@ -57,6 +67,7 @@ const getColorClasses = (color: string) => {
 
 const ProjectCard = ({ project, index, isInView, onExpand }: { project: Project; index: number; isInView: boolean; onExpand: (project: Project) => void }) => {
   const colors = getColorClasses(project.color);
+  const [showPreview, setShowPreview] = useState(false);
 
   return (
     <>
@@ -69,19 +80,37 @@ const ProjectCard = ({ project, index, isInView, onExpand }: { project: Project;
       >
         {/* Project Preview */}
         <div className="relative aspect-video overflow-hidden bg-muted">
-          <iframe
-            src={project.url}
-            title={project.title}
-            loading="lazy"
-            className="w-full h-full border-0 pointer-events-none"
-            tabIndex={-1}
-          />
+          {showPreview ? (
+            <iframe
+              src={project.url}
+              title={project.title}
+              loading="lazy"
+              className="w-full h-full border-0"
+              tabIndex={-1}
+            />
+          ) : (
+            <div className={`w-full h-full flex flex-col items-center justify-center ${colors.bg} relative`}>
+              <div className={`absolute inset-0 bg-gradient-to-br from-transparent to-background/50`} />
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowPreview(true)}
+                className={`relative z-10 flex flex-col items-center gap-2 p-4 rounded-xl border ${colors.border} bg-background/50 backdrop-blur-md transition-colors hover:bg-background/80`}
+              >
+                <PlayCircle className={`w-12 h-12 ${colors.text}`} />
+                <span className="text-sm font-medium">Cargar Vista Previa</span>
+              </motion.button>
+              <div className="absolute bottom-4 left-4 text-xs text-muted-foreground/60">
+                Click para interactuar
+              </div>
+            </div>
+          )}
           
           {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none" />
           
           {/* Action Buttons */}
-          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-20">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
